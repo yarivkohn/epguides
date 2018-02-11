@@ -19,6 +19,8 @@ class App extends DiBridge {
 	  	'settings.displayErrorDetails' => true,
 	  ]);
 
+	  $builder->addDefinitions(__DIR__.DS.'container.php');
+
 
 	}
 
