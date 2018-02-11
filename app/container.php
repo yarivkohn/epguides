@@ -7,6 +7,7 @@
  */
 
 use Interop\Container\ContainerInterface;
+use Epguides\Models\ViewAll;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 
@@ -15,6 +16,7 @@ return [
     Twig::class => function(ContainerInterface $c){
     $twig = new Twig(__DIR__.DS.'..'.DS.'resources'.DS.'views', [
         'cache' => false,
+        'debug' => true,
     ]);
     $twig ->addExtension(new TwigExtension(
        $c->get('router'),
@@ -22,4 +24,7 @@ return [
     ));
     return $twig;
 },
+    ViewAll::class => function( ContainerInterface $c){
+		return new ViewAll();
+    }
 ];

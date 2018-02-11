@@ -1,1 +1,6 @@
-This is backward compatibility page!!!
+{% extends '/home.twig' %}
+
+{% block content %}
+    {{ shows|raw }}
+{% endblock %}
+
