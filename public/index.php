@@ -6,8 +6,14 @@
  * Time: 4:51 PM
  */
 
-ini_set('display_errors' ,1);
-error_reporting(E_ALL);
+define('DS', DIRECTORY_SEPARATOR);
+define('ENV', getenv('ENV'));
+define('DEVELOPER_MODE', getenv('DEVELOPER_MODE'));
+
+//if('DEV' == ENV){
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+//}
 
 require_once __DIR__.'/../bootstrap/app.php';
 
