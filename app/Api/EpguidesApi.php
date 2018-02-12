@@ -10,17 +10,27 @@
 
 namespace Epguides\Api;
 
+use Epguides\Api\Sms\Textlocal;
 use http\Exception;
 
 class EpguidesApi
 {
 
     const EPGUIDES_API_URL = 'http://epguides.frecar.no/show/';
+	const USER_EMAIL       = 'yariv_kohn@yahoo.com';
+	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dba';
 
-    private $http_code;
+	private $http_code;
     private $response_body;
+	private $_smsHandler;
 
-    /**
+    public function __construct() {
+    	if(!$this->_smsHandler){
+    		$this->_smsHandler = new Textlocal(self::USER_EMAIL, self::HASH);
+	    }
+    }
+
+	/**
      * Send API request to epguids.com server
      * @param $url
      * @return bool|mixed
@@ -107,6 +117,7 @@ class EpguidesApi
     	$releaseDate = date_create_from_format('Y-m-d',$episode->release_date);
 		$diff = $today->diff($releaseDate);
 		if($diff->days > 0 && $diff->days < 7){
+			$this->sendNotification($episode);
 			$episode->is_new = true;
 		}
 
@@ -128,6 +139,16 @@ class EpguidesApi
 		$diff = $today->diff($releaseDate);
 		if($diff->days < 3 ){
 			$episode->almost_released = true;
+		}
+	}
+
+	private function sendNotification($episode) {
+		$messageSent = false; //TODO: Set in Db that message was already sent to user.
+		$text = $episode->show->title. ' S'.$episode->season.'E'.$episode->number.' '. $episode->release_date;
+		try {
+	//		$this->_smsHandler->sendSms(array('972502164884'), $text, 'Epguides');
+		} catch (Sms\Exception $e) {
+			echo $e->getMessage();
 		}
 	}
 }
