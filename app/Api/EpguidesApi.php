@@ -73,7 +73,7 @@ class EpguidesApi
     }
 
     /**
-     * Give show name, return last episode release date
+     * Given show name, return last episode release date
      * @param $show
      * @return mixed
      */
