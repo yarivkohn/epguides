@@ -15,13 +15,14 @@ return [
     'router' => DI\object(Slim\Router::class),
     Twig::class => function(ContainerInterface $c){
     $twig = new Twig(__DIR__.DS.'..'.DS.'resources'.DS.'views', [
-        'cache' => false,
-        'debug' => true,
+	    'debug' => true,
+	    'cache' => false,
     ]);
     $twig ->addExtension(new TwigExtension(
        $c->get('router'),
        $c->get('request')->getUri()
     ));
+    $twig->addExtension(new Twig_Extension_Debug());
     return $twig;
 },
     ViewAll::class => function( ContainerInterface $c){

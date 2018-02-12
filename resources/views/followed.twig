@@ -1,22 +1,17 @@
 {% extends '/home.twig' %}
 
 {% block content %}
-
-    {% for index, show in followed %}
-        {% if index % 3 == 0 %}
-            <div class="row">
-        {% endif %}
-        <div class="col col-lg-4" style="border: solid black 2px; margin: 5px;">
-            <p>{{ index }}</p>
-            <p>Show name: {{ show.name }}</p>
-            <p>Last episode # {{ show.lastEpisode.number }}</p>
-            <p>Last episode release date {{ show.lastEpisode.release_date }}</p>
-            <p>Next episode # {{ show.nextEpisode.number }}</p>
-            <p>Next episode release date {{ show.nextEpisode.release_date }}</p>
-        </div>
-        {% if index % 3 == 0 %}
+    <div class="row">
+    {% for idx, show in followed %}
+            <div class="col-md-4 col-sm-6">
+                {% include 'partials/item.twig' with {show : show} %}
             </div>
-        {% endif %}
+            {% if(idx+1) % 3 == 0 %}
+                </div>
+                <div class="row">
+            {% endif %}
+
     {% endfor %}
+    </div>
 {% endblock %}
 

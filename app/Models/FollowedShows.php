@@ -22,7 +22,7 @@ class FollowedShows {
         }
     }
 
-    public function getFollowedShows()
+    public function getFollowedShows($onlyShowEpisodesWithNextReleaseDate = true)
     {
         $list = [];
         if(file_exists($this->cacheDir()) &&
@@ -35,7 +35,15 @@ class FollowedShows {
                 $show->name = $name;
                 $show->nextEpisode = $this->_api->nextEpisode($showCode);
                 $show->lastEpisode = $this->_api->lastEpisode($showCode);
-                $list[] = $show;
+                if(!isset($show->nextEpisode->release_date)){ //filter shows which currently doesn't have next show
+	                if($onlyShowEpisodesWithNextReleaseDate){
+	                	continue;
+	                } else {
+	                	$list[] = $show;
+	                }
+                } else {
+                	$list[] = $show;
+                }
             }
             file_put_contents($this->cacheDir(), json_encode($list));
         }
@@ -44,24 +52,26 @@ class FollowedShows {
 
     private function getListOfShows()
     {
-        return array(
-            'The walking dead' => 'walkingdead',
-            'The big bang theory' => 'bigbangtheory',
-            'New girl' => 'newgirl',
-            'Modern Family' => 'modernfamily',
-            'Brooklyn nine nine' => 'brooklynninenine',
-            'The black list' => 'blacklist',
-            'Sons of Anarchy' => 'sonsofanarchy',
-            'Shameless' => 'shameless_us',
-            'Silicon VAlley' => 'siliconvalley',
-            'Sherlock holmes' => 'sherlock',
-            'American dad' => 'americandad',
-            'Family Guy' => 'familyguy',
-            'Games of thrones' => 'GameofThrones',
-            'How to get away with murder' => 'howtogetawaywithmurder',
-            'Whitney' => 'whitney',
+    	$shows = array(
+		    'The walking dead' => 'walkingdead',
+		    'The big bang theory' => 'bigbangtheory',
+		    'New girl' => 'newgirl',
+		    'Modern Family' => 'modernfamily',
+		    'Brooklyn nine nine' => 'brooklynninenine',
+		    'The black list' => 'blacklist',
+		    'Sons of Anarchy' => 'sonsofanarchy',
+		    'Shameless' => 'shameless_us',
+		    'Silicon Valley' => 'siliconvalley',
+		    'Sherlock holmes' => 'sherlock',
+		    'American dad' => 'americandad',
+		    'Family Guy' => 'familyguy',
+		    'Games of thrones' => 'GameofThrones',
+		    'How to get away with murder' => 'howtogetawaywithmurder',
+		    'Whitney' => 'whitney',
 
-        );
+	    );
+	    natcasesort($shows);
+        return $shows;
     }
 
     /**
