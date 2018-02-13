@@ -17,6 +17,6 @@ class OldController
 {
     public function index(Request $request, Response $response, Twig $view, ViewAll $viewShowsHandler){
         $listShows = $viewShowsHandler->drawTable();
-    	return $view->render($response, 'backward.twig', ['shows' =>$listShows]);
+    	return $view->render($response, 'backward.twig', ['Show' =>$listShows]);
     }
 }

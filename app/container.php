@@ -6,6 +6,7 @@
  * Time: 8:20 AM
  */
 
+use Epguides\Models\Show;
 use Interop\Container\ContainerInterface;
 use Epguides\Models\ViewAll;
 use Slim\Views\Twig;
@@ -13,19 +14,23 @@ use Slim\Views\TwigExtension;
 
 return [
     'router' => DI\object(Slim\Router::class),
-    Twig::class => function(ContainerInterface $c){
-    $twig = new Twig(__DIR__.DS.'..'.DS.'resources'.DS.'views', [
-	    'debug' => true,
-	    'cache' => false,
-    ]);
-    $twig ->addExtension(new TwigExtension(
-       $c->get('router'),
-       $c->get('request')->getUri()
-    ));
-    $twig->addExtension(new Twig_Extension_Debug());
-    return $twig;
-},
-    ViewAll::class => function( ContainerInterface $c){
-		return new ViewAll();
+    Twig::class => function (ContainerInterface $c) {
+        $twig = new Twig(__DIR__ . DS . '..' . DS . 'resources' . DS . 'views', [
+            'debug' => true,
+            'cache' => false,
+        ]);
+        $twig->addExtension(new TwigExtension(
+            $c->get('router'),
+            $c->get('request')->getUri()
+        ));
+        $twig->addExtension(new Twig_Extension_Debug());
+        return $twig;
+    },
+    ViewAll::class => function (ContainerInterface $c) {
+        return new ViewAll();
+    },
+
+    Show::class => function (ContainerInterface $c) {
+        return new Show();
     }
 ];
