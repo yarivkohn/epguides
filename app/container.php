@@ -6,6 +6,7 @@
  * Time: 8:20 AM
  */
 
+use Epguides\Models\Episode;
 use Epguides\Models\Show;
 use Interop\Container\ContainerInterface;
 use Epguides\Models\ViewAll;
@@ -26,11 +27,16 @@ return [
         $twig->addExtension(new Twig_Extension_Debug());
         return $twig;
     },
-    ViewAll::class => function (ContainerInterface $c) {
+    ViewAll::class => function(ContainerInterface $c) {
         return new ViewAll();
     },
 
-    Show::class => function (ContainerInterface $c) {
+    Show::class => function(ContainerInterface $c) {
         return new Show();
+    },
+
+    Episode::class =>function(ContainerInterface $c)
+    {
+    	return new Episode();
     }
 ];

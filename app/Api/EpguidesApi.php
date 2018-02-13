@@ -11,6 +11,7 @@
 namespace Epguides\Api;
 
 use Epguides\Api\Sms\Textlocal;
+use Epguides\Models\Episode;
 use http\Exception;
 
 class EpguidesApi
@@ -23,12 +24,24 @@ class EpguidesApi
 	private $http_code;
     private $response_body;
 	private $_smsHandler;
+	private $_episodeHandler;
+	private $_showId;
 
     public function __construct() {
     	if(!$this->_smsHandler){
     		$this->_smsHandler = new Textlocal(self::USER_EMAIL, self::HASH);
 	    }
+	    if(!$this->_episodeHandler){
+    		$this->_episodeHandler = new Episode();
+	    }
     }
+
+	/**
+	 * @param mixed $showId
+	 */
+	public function setShowId($showId) {
+		$this->_showId = $showId;
+	}
 
 	/**
      * Send API request to epguids.com server
@@ -143,11 +156,25 @@ class EpguidesApi
 	}
 
 	private function sendNotification($episode) {
-		$messageSent = false; //TODO: Set in Db that message was already sent to user.
+		$episodeData = $this->_episodeHandler->where('last_episode_season',$episode->season)
+			->where('last_episode_number', $episode->number)
+			->where('show_id', $this->_showId)
+			->first(['sms_sent']);
+		if(!empty($episodeData)){
+			$messageSent = boolval($episodeData->getAttribute('sms_sent')); //TODO: Set in Db that message was already sent to user.
+		} else {
+			$messageSent = true; //In case of an error don't overflow with SMS
+		}
 		$text = $episode->show->title. ' S'.$episode->season.'E'.$episode->number.' '. $episode->release_date;
 		try {
-	//		$this->_smsHandler->sendSms(array('972502164884'), $text, 'Epguides');
-		} catch (Sms\Exception $e) {
+			if(!$messageSent){
+//			$this->_smsHandler->sendSms(array('972502164884'), $text, 'Epguides');
+			$this->_episodeHandler->where('last_episode_season',$episode->season)
+				->where('last_episode_number', $episode->number)
+				->where('show_id', $this->_showId)
+				->update(['sms_sent'=> 1]);
+			}
+		} catch (Exception $e) {
 			echo $e->getMessage();
 		}
 	}
