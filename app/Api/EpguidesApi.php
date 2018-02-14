@@ -20,8 +20,9 @@ class EpguidesApi
     const EPGUIDES_API_URL = 'http://epguides.frecar.no/show/';
 	const USER_EMAIL       = 'yariv_kohn@yahoo.com';
 	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dba';
+    const SUBSCRIBER = '972502164884';
 
-	private $http_code;
+    private $http_code;
     private $response_body;
 	private $_smsHandler;
 	private $_episodeHandler;
@@ -168,13 +169,13 @@ class EpguidesApi
 		$text = $episode->show->title. ' S'.$episode->season.'E'.$episode->number.' '. $episode->release_date;
 		try {
 			if(!$messageSent){
-//			$this->_smsHandler->sendSms(array('972502164884'), $text, 'Epguides');
+//			$result = $this->_smsHandler->sendSms(array(self::SUBSCRIBER), $text, 'New Episode');
 			$this->_episodeHandler->where('last_episode_season',$episode->season)
 				->where('last_episode_number', $episode->number)
 				->where('show_id', $this->_showId)
 				->update(['sms_sent'=> 1]);
 			}
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			echo $e->getMessage();
 		}
 	}
