@@ -7,6 +7,7 @@
  */
 
 //HTTP GET ACTIONS
-$app->get('/', ['Epguides\Controllers\HomeController', 'index'])->setName('home');
+$app->get('/', ['Epguides\Controllers\HomeController', 'show'])->setName('home');
+$app->get('/all', ['Epguides\Controllers\HomeController', 'showAll'])->setName('home');
 $app->get('/update', ['Epguides\Controllers\DbController', 'update'])->setName('updateDb');
 $app->get('/old', ['Epguides\Controllers\OldController', 'index'])->setName('backwardCompatibility');

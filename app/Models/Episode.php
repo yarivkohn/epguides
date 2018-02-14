@@ -25,11 +25,11 @@ class Episode extends Model {
 		'sms_sent',
 	];
 
-	public function getFollowedShows() {
+	public function getFollowedShows($showall = false) {
 		$list = [];
-		foreach ($this->getListOfShows() as $show) {
+		foreach ($this->getListOfShows($showall) as $show) {
 			$episodeData = $show->getAttributes();
-			$list[]      = $this->createEpisodeObject($episodeData);
+			$list[] = $this->createEpisodeObject($episodeData);
 		}
 		return $list;
 	}
@@ -37,11 +37,11 @@ class Episode extends Model {
 
 	/**
 	 * Return list of episodes with their data
+	 * @param $showAll
 	 * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|static[]
 	 */
-	private function getListOfShows() {
-		return $this->whereNotNull('next_episode_release_date')
-			->join('shows', 'show_id', '=', 'id', 'left')
+	private function getListOfShows($showAll = false ) {
+		$episodeList  = $this->join('shows', 'show_id', '=', 'id', 'left')
 			->select('episodes.name',
 				'episodes.last_episode_season',
 				'episodes.last_episode_number',
@@ -49,7 +49,11 @@ class Episode extends Model {
 				'episodes.next_episode_season',
 				'episodes.next_episode_number',
 				'episodes.next_episode_release_date',
-				'shows.name as show_name')->get();
+				'shows.name as show_name');
+		if(!$showAll){
+			$episodeList->whereNotNull('next_episode_release_date');
+		}
+		return $episodeList->get();
 	}
 
 	/**
@@ -104,9 +108,11 @@ class Episode extends Model {
 	private function isReleaseDateClose($episode) {
 		$today       = new \DateTime();
 		$releaseDate = date_create_from_format('Y-m-d', $episode->release_date);
-		$diff        = $today->diff($releaseDate);
-		if ($diff->days<3) {
-			$episode->almost_released = TRUE;
+		if(isset($releaseDate) && $releaseDate !==false){
+			$diff = $today->diff($releaseDate);
+			if ($diff->days<3) {
+				$episode->almost_released = TRUE;
+			}
 		}
 	}
 

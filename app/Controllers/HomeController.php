@@ -15,10 +15,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HomeController
 {
-    public function index(Request $request, Response $response, Twig $view)
+    public function show(Request $request, Response $response, Twig $view)
     {
         $model = new Episode();
         $listOfAllShows = $model->getFollowedShows();
+        return $view->render($response, 'followed.twig', [
+            'followed' => $listOfAllShows,
+        ]);
+    }
+
+    public function showAll(Request $request, Response $response, Twig $view)
+    {
+        $model = new Episode();
+        $listOfAllShows = $model->getFollowedShows(true);
         return $view->render($response, 'followed.twig', [
             'followed' => $listOfAllShows,
         ]);
