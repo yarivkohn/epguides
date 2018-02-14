@@ -15,21 +15,44 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HomeController
 {
-    public function show(Request $request, Response $response, Twig $view)
+	/**
+	 * Return list of shows with next release date only
+	 * @param Request  $request
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @return Response
+	 */
+	public function show(Request $request, Response $response, Twig $view)
     {
         $model = new Episode();
         $listOfAllShows = $model->getFollowedShows();
-        return $view->render($response, 'followed.twig', [
-            'followed' => $listOfAllShows,
-        ]);
+	    return $this->drawView($response, $view, $listOfAllShows);
     }
 
-    public function showAll(Request $request, Response $response, Twig $view)
+	/**
+	 * Return list of all shows exist in Db
+	 * @param Request  $request
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @return Response
+	 */
+	public function showAll(Request $request, Response $response, Twig $view)
     {
         $model = new Episode();
         $listOfAllShows = $model->getFollowedShows(true);
-        return $view->render($response, 'followed.twig', [
-            'followed' => $listOfAllShows,
-        ]);
+	    return $this->drawView($response, $view, $listOfAllShows);
     }
+
+	/**
+	 * Draw the view with relevant shows
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @param          $listOfAllShows
+	 * @return Response
+	 */
+	private function drawView(Response $response, Twig $view, $listOfAllShows) {
+		return $view->render($response, 'followed.twig', [
+			'followed' => $listOfAllShows,
+		]);
+	}
 }

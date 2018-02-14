@@ -25,6 +25,10 @@ class Episode extends Model {
 		'sms_sent',
 	];
 
+	/**
+	 * @param bool $showall
+	 * @return array
+	 */
 	public function getFollowedShows($showall = false) {
 		$list = [];
 		foreach ($this->getListOfShows($showall) as $show) {
@@ -95,8 +99,6 @@ class Episode extends Model {
 		if ($diff->days>=7 && $diff->days<14) {
 			$episode->is_getting_older = TRUE;
 		}
-
-
 	}
 
 	/**
@@ -123,5 +125,4 @@ class Episode extends Model {
 		$this->isNewRelease($episode->lastEpisode);
 		$this->isReleaseDateClose($episode->nextEpisode);
 	}
-
 }

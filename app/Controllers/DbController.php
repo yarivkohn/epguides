@@ -18,6 +18,6 @@ class DbController
     public function update(Request $request, Response $response, Twig $view)
     {
         $model = new EpisodesDb();
-        $model->getFollowedShows();
+        $model->updateDbData();
     }
 }

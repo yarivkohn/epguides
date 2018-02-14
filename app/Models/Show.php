@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Model;
 class Show extends Model
 {
 
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
 	public function episode(){
 		return $this->belongsTo(Episode::class);
 	}

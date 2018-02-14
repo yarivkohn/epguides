@@ -15,7 +15,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class OldController
 {
-    public function index(Request $request, Response $response, Twig $view, ViewAll $viewShowsHandler){
+	/**
+	 * @param Request  $request
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @param ViewAll  $viewShowsHandler
+	 * @return Response
+	 */
+	public function index(Request $request, Response $response, Twig $view, ViewAll $viewShowsHandler){
         $listShows = $viewShowsHandler->drawTable();
     	return $view->render($response, 'backward.twig', ['Show' =>$listShows]);
     }

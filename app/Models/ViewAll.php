@@ -35,15 +35,20 @@ class ViewAll
 
     private $api;
 
-    public function __construct()
+	/**
+	 * ViewAll constructor.
+	 */
+	public function __construct()
     {
         if (!$this->api) {
             $this->api = new EpguidesApi();
         }
-//		$this->drawTable();
     }
 
-    public function drawTable()
+	/**
+	 * @return string
+	 */
+	public function drawTable()
     {
         $html = '';
         $html .= "<table class='table' border='1'>";
@@ -56,7 +61,10 @@ class ViewAll
 
     }
 
-    public function drawList()
+	/**
+	 * @return string
+	 */
+	public function drawList()
     {
         $tableData = '';
         foreach ($this->followUpTvShows as $displayName => $show) {
@@ -70,11 +78,9 @@ class ViewAll
 
             } else {
                 $nextTableData = "<td></td><td>No next episode for now</td>";
-//                $episodeTableData = "<td>{$displayName}</td><td></td><td></td>";
             }
 
             $tableData .= "<tr>{$episodeTableData}{$lastTableData}{$nextTableData}</tr>";
-//			$tableData[] = "<tr>{$episodeTableData}{$lastTableData}{$nextTableData}</tr>";
         }
         return $tableData;
     }

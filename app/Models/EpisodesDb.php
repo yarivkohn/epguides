@@ -18,7 +18,10 @@ class EpisodesDb {
     private $_model;
     private $_smsHandler;
 
-    public function __construct()
+	/**
+	 * EpisodesDb constructor.
+	 */
+	public function __construct()
     {
         if(!$this->_api){
             $this->_api = new EpguidesApi();
@@ -32,7 +35,12 @@ class EpisodesDb {
         }
     }
 
-    public function getFollowedShows($onlyShowEpisodesWithNextReleaseDate = true)
+
+	/**
+	 * Updates Db with new episode data.
+	 * If new episode was released, sends SMS
+	 */
+	public function updateDbData()
     {
             foreach($this->getListOfShows() as $name => $showCode){
                 $show = new \stdClass();
@@ -46,7 +54,11 @@ class EpisodesDb {
 
     }
 
-    private function getListOfShows()
+	/**
+	 * Return list of all shows being followed
+	 * @return array
+	 */
+	private function getListOfShows()
     {
     	$formattedArray = array();
     	$shows = $this->_model->all()->toArray();
@@ -83,7 +95,7 @@ class EpisodesDb {
 		}
 		try {
 			$this->_model->episode()->create($attributes);
-		} catch (QueryException $e) { //QueryException
+		} catch (QueryException $e) {
 			$isThisException = TRUE;
 			//TODO: Log this error!
 		}
