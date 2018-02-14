@@ -9,14 +9,16 @@
 namespace Epguides\Models;
 
 use Epguides\Api\EpguidesApi;
+use Epguides\Api\Sms\SmsSender;
 use Illuminate\Database\QueryException;
 
-class FollowedShows {
+class EpisodesDb {
 
     const MAX_LIFE_TIME = 60 * 60 * 12 ; //12 Hrs cache
 
 	private $_api;
     private $_model;
+    private $_smsHandler;
 
     public function __construct()
     {
@@ -26,11 +28,15 @@ class FollowedShows {
         if(!$this->_model){
         	$this->_model = new Show();
         }
+
+        if(!$this->_smsHandler){
+        	$this->_smsHandler = new SmsSender();
+        }
     }
 
     public function getFollowedShows($onlyShowEpisodesWithNextReleaseDate = true)
     {
-        $list = [];
+//        $list = [];
 //        if(file_exists($this->cacheDir()) &&
 //            is_readable($this->cacheDir()) &&
 //            filemtime($this->cacheDir()) > time() - self::MAX_LIFE_TIME){
@@ -40,10 +46,11 @@ class FollowedShows {
                 $show = new \stdClass();
                 $show->name = $name;
 	            $showId = $this->_model->where('api_id', $showCode )->first(['id'])->getAttributeValue('id');
-	            $this->_api->setShowId($showId);
-                $show->nextEpisode = $this->_api->nextEpisode($showCode);
-                $show->lastEpisode = $this->_api->lastEpisode($showCode);
+//	            $this->_smsHandler->setShowId($showId);
+	            $show->lastEpisode = $this->_api->lastEpisode($showCode);
+	            $show->nextEpisode = $this->_api->nextEpisode($showCode);
 	            $this->writeEpisodeToDb($show, $showId);
+	            $this->_smsHandler->sendNewReleaseSms($show->lastEpisode, $showId);
 //	            if(!isset($show->nextEpisode->release_date)){ //filter shows which currently doesn't have next show
 //	                if($onlyShowEpisodesWithNextReleaseDate){
 //	                	continue;
@@ -56,7 +63,7 @@ class FollowedShows {
             }
 //            file_put_contents($this->cacheDir(), json_encode($list));
 //        }
-        return $list;
+//        return $list;
     }
 
     private function getListOfShows()
@@ -96,7 +103,7 @@ class FollowedShows {
             'next_episode_season'       => isset($show->nextEpisode->season) ? $show->nextEpisode->season : NULL,
             'next_episode_number'       => isset($show->nextEpisode->number) ? $show->nextEpisode->number : NULL,
             'next_episode_release_date' => isset($show->nextEpisode->release_date) ? $show->nextEpisode->release_date : NULL,
-            'sms_sent'                  => 0,
+//            'sms_sent'                  => 0,
         ];
 		if(!empty($episodeData->first())){
 		    $episodeData->update($attributes);

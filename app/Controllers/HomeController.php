@@ -8,7 +8,7 @@
 
 namespace Epguides\Controllers;
 
-use Epguides\Models\FollowedShows;
+use Epguides\Models\EpisodesDb;
 use Epguides\Models\Show;
 use Slim\Views\Twig;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,7 +18,7 @@ class HomeController
 {
     public function index(Request $request, Response $response, Twig $view)
     {
-        $model = new FollowedShows();
+        $model = new EpisodesDb();
         $listOfAllShows = $model->getFollowedShows();
         return $view->render($response, 'followed.twig', [
             'followed' => $listOfAllShows,
