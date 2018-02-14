@@ -14,8 +14,6 @@ use Illuminate\Database\QueryException;
 
 class EpisodesDb {
 
-    const MAX_LIFE_TIME = 60 * 60 * 12 ; //12 Hrs cache
-
 	private $_api;
     private $_model;
     private $_smsHandler;
@@ -36,34 +34,16 @@ class EpisodesDb {
 
     public function getFollowedShows($onlyShowEpisodesWithNextReleaseDate = true)
     {
-//        $list = [];
-//        if(file_exists($this->cacheDir()) &&
-//            is_readable($this->cacheDir()) &&
-//            filemtime($this->cacheDir()) > time() - self::MAX_LIFE_TIME){
-//            $list = json_decode(file_get_contents($this->cacheDir()));
-//        } else {
             foreach($this->getListOfShows() as $name => $showCode){
                 $show = new \stdClass();
                 $show->name = $name;
 	            $showId = $this->_model->where('api_id', $showCode )->first(['id'])->getAttributeValue('id');
-//	            $this->_smsHandler->setShowId($showId);
 	            $show->lastEpisode = $this->_api->lastEpisode($showCode);
 	            $show->nextEpisode = $this->_api->nextEpisode($showCode);
 	            $this->writeEpisodeToDb($show, $showId);
 	            $this->_smsHandler->sendNewReleaseSms($show->lastEpisode, $showId);
-//	            if(!isset($show->nextEpisode->release_date)){ //filter shows which currently doesn't have next show
-//	                if($onlyShowEpisodesWithNextReleaseDate){
-//	                	continue;
-//	                } else {
-//	                	$list[] = $show;
-//	                }
-//                } else {
-//                	$list[] = $show;
-//                }
             }
-//            file_put_contents($this->cacheDir(), json_encode($list));
-//        }
-//        return $list;
+
     }
 
     private function getListOfShows()
@@ -75,14 +55,6 @@ class EpisodesDb {
 	    }
 	    natcasesort($formattedArray);
         return $formattedArray;
-    }
-
-    /**
-     * @return string
-     */
-    private function cacheDir()
-    {
-        return __DIR__ . DS . '..' . DS . '..' . DS . 'resources' . DS . 'cache' . DS . 'cache.json';
     }
 
 	/**

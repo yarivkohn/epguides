@@ -10,7 +10,6 @@
 
 namespace Epguides\Api;
 
-use Epguides\Api\Sms\SmsSender;
 use http\Exception;
 
 class EpguidesApi
@@ -77,7 +76,6 @@ class EpguidesApi
         if(!$result){
             return "Unable to get next episode";
         }
-//        $this->isReleaseDateClose($result->episode);
         return $result->episode;
     }
 
@@ -90,7 +88,6 @@ class EpguidesApi
     {
         $url = self::EPGUIDES_API_URL.$show."/last/";
         $result = json_decode($this->sendApiRequest($url));
-//        $this->isNewRelease($result->episode);
         return $result->episode;
     }
 
@@ -104,41 +101,4 @@ class EpguidesApi
         $result = json_decode($this->sendApiRequest($url));
         return $result;
     }
-
-//	/**
-//	 * If episode was released in the past week, add "is_new" tag.
-//	 * If episode was released more than a week ago but less than 2 weeks, add "getting_older" tag.
-//	 * @param $episode
-//	 */
-//	private function isNewRelease($episode) {
-//    	$today = new \DateTime();
-//    	$releaseDate = date_create_from_format('Y-m-d',$episode->release_date);
-//		$diff = $today->diff($releaseDate);
-//		if($diff->days > 0 && $diff->days < 7){
-//			$smsHandler = new SmsSender();
-//			$smsHandler->sendNotification($episode);
-//			$episode->is_new = true;
-//		}
-//
-//		if($diff->days >= 7 && $diff->days < 14){
-//			$episode->is_getting_older = true;
-//		}
-//
-//
-//	}
-
-//	/**
-//	 * If release date is getting close (less than 3 days),
-//	 * add "almost_released" tag.
-//	 * @param $episode
-//	 */
-//	private function isReleaseDateClose($episode) {
-//		$today = new \DateTime();
-//		$releaseDate = date_create_from_format('Y-m-d',$episode->release_date);
-//		$diff = $today->diff($releaseDate);
-//		if($diff->days < 3 ){
-//			$episode->almost_released = true;
-//		}
-//	}
-
 }

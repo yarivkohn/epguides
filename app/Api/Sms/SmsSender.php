@@ -68,6 +68,7 @@ class SmsSender {
 			if(!$messageSent){
 			$text = $episode->show->title. ' S'.$episode->season.'E'.$episode->number.' '. $episode->release_date;
 			file_put_contents('sms.log', date('Y-m-d H:i:s').' - '.$text.PHP_EOL, FILE_APPEND);
+			//TODO: upon next release, need to check what is the result of successful response. Only after successful SMS update Db status.
 //			$result = $this->_smsHandler->sendSms(array(self::SUBSCRIBER), $text, 'New Episode');
 			$episodeData->update(['sms_sent'=> '1']);
 			}
