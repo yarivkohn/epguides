@@ -75,9 +75,8 @@ class EpisodesDb {
 	 */
 	private function writeEpisodeToDb($show, $showId) {
 		$episodeModel = new Episode();
-		$episodeData = $episodeModel->where('last_episode_season',$show->lastEpisode->season)
-									->where('last_episode_number', $show->lastEpisode->number)
-									->where('show_id', $showId);
+		$episodeData = $episodeModel->where('show_id', $showId);
+
         $attributes = [
             'name'                      => isset($show->lastEpisode->title) ? $show->lastEpisode->title : 'n/a',
             'show_id'                   => $showId,
@@ -87,15 +86,20 @@ class EpisodesDb {
             'next_episode_season'       => isset($show->nextEpisode->season) ? $show->nextEpisode->season : NULL,
             'next_episode_number'       => isset($show->nextEpisode->number) ? $show->nextEpisode->number : NULL,
             'next_episode_release_date' => isset($show->nextEpisode->release_date) ? $show->nextEpisode->release_date : NULL,
-//            'sms_sent'                  => 0,
         ];
 		if(!empty($episodeData->first())){
 		    $episodeData->update($attributes);
 		    return; //Episode is already in Db
 		}
 		try {
-			$this->_model->episode()->create($attributes);
+			$episodeData->delete();
+			$this->_model->episode()->create(
+				array_merge($attributes, array('sms_sent'=> 0))
+			);
 		} catch (QueryException $e) {
+			$isThisException = TRUE;
+			//TODO: Log this error!
+		} catch (\Exception $e) {
 			$isThisException = TRUE;
 			//TODO: Log this error!
 		}
