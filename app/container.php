@@ -8,6 +8,7 @@
 
 use Epguides\Models\Episode;
 use Epguides\Models\Show;
+use Epguides\Validation\Validator;
 use Interop\Container\ContainerInterface;
 use Epguides\Models\ViewAll;
 use Slim\Views\Twig;
@@ -38,5 +39,10 @@ return [
     Episode::class =>function(ContainerInterface $c)
     {
     	return new Episode();
+    },
+
+    Validator::class => function(ContainerInterface $c)
+    {
+        return new Validator();
     }
 ];

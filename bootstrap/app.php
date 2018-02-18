@@ -31,5 +31,8 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+$container = $app->getContainer();
+$app->add(new \Epguides\Middleware\ValidationErrorMiddleware($container));
+
 
 require_once  __DIR__.DS.'..'.DS.'app'.DS.'routes.php';

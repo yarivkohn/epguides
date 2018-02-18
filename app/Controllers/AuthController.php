@@ -10,6 +10,8 @@ namespace Epguides\Controllers;
 
 
 use Epguides\Models\User;
+use Epguides\Validation\Validator;
+use Respect\Validation\Validator as v;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Router;
@@ -23,8 +25,19 @@ class AuthController
 			return $view->render($response, 'auth/signup.twig');
 		}
 
-		public function postSignUp(Request $request, Response $response, Router $router)
+		public function postSignUp(Request $request, Response $response, Router $router, Validator $validator)
 		{
+
+		    $validator->validator($request, [
+		        'email' => v::email(),
+		        'name' => v::notEmpty()->alpha(),
+		        'password' =>  v::noWhitespace()->notEmpty(),
+            ]);
+
+		    if($validator->failed()){
+                return $response->withRedirect($router->pathFor('auth.signup') );
+            }
+
 			$user= new User();
 			$user->create(
 				[

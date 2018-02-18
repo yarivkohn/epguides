@@ -1,4 +1,4 @@
-{%  extends '/home.twig' %}
+{% extends '/home.twig' %}
 
 {% block content %}
 
@@ -8,17 +8,27 @@
                 <div class="panel-heading">Sign up</div>
                 <div class="panel-body">
                     <form action="{{ path_for('auth.signup') }}" method="post">
-                        <div class="form-group">
+                        <div class="form-group{{ errors.email ? ' has-error' : '' }}">
                             <label for="email">Email</label>
-                            <input type="email" name="email" id="email" placeholder="user@service.com" class="form-control">
+                            <input type="email" name="email" id="email" placeholder="user@service.com"
+                                   class="form-control">
+                            {% if errors.email %}
+                                <span class="help-block">{{ errors.email | first }}</span>
+                            {% endif %}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group{{ errors.name ? ' has-error' : '' }}">
                             <label for="name">Name</label>
                             <input type="text" name="name" id="name" placeholder="Your name here" class="form-control">
+                            {% if errors.name %}
+                                <span class="help-block">{{ errors.name | first }}</span>
+                            {% endif %}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group{{ errors.password ? ' has-error' : '' }}">
                             <label for="password">Passoword</label>
                             <input type="password" name="password" id="password" class="form-control">
+                            {% if errors.password %}
+                                <span class="help-block">{{ errors.password | first }}</span>
+                            {% endif %}
                         </div>
 
                         <button type="submit" class="btn btn-default">Sign up</button>
@@ -29,4 +39,4 @@
         </div>
     </div>
 
-{%  endblock %}
+{% endblock %}
