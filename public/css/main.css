@@ -1,0 +1,54 @@
+/*body {*/
+/*padding-bottom: 60px;*/
+/*background:#E3F7D4;*/
+/*}*/
+/*h4 {*/
+/*min-height: 50px;*/
+/*line-height: 50px;*/
+/*background:#340D09;*/
+/*color:#66B032;*/
+/*}*/
+/*{*/
+/*color:#340D09;*/
+/*}*/
+/*.navbar{*/
+/*background:#66B032;*/
+/*}*/
+/*.new-release {*/
+/*color:blue;*/
+/*}*/
+/*.getting-old{*/
+/*color: #FE2712;*/
+/*}*/
+
+body {
+	padding-bottom: 60px;
+	padding-top: 100px;
+	background: #F3F7D4;
+}
+
+h4 {
+	min-height: 50px;
+	line-height: 50px;
+	background: #340D09;
+	color: #CBE432;
+}
+
+/*.navbar{*/
+	/*background: #CBE432;*/
+	/**/
+/*}*/
+
+.new-release {
+	color: blue;
+}
+.getting-old{
+	color: #FE2712;
+}
+.almost-released{
+	color: green;
+}
+.title{
+	color: #340926;
+	font-size: 2em;
+}

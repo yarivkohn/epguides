@@ -9,15 +9,16 @@
 namespace Epguides\Controllers;
 
 use Epguides\Models\EpisodesDb;
-use Slim\Views\Twig;
+use Slim\Router;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class DbController
 {
-    public function update(Request $request, Response $response, Twig $view)
+    public function update(Request $request, Response $response, Router $router)
     {
         $model = new EpisodesDb();
         $model->updateDbData();
+	    return $response->withRedirect($router->pathFor('home') );
     }
 }
