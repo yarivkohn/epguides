@@ -15,6 +15,7 @@ use Epguides\Models\ViewAll;
 use Slim\Csrf\Guard;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
+use Slim\Flash\Messages as Flash;
 
 return [
     'router' => DI\object(Slim\Router::class),
@@ -62,5 +63,10 @@ return [
     Auth::class => function(ContainerInterface $c)
     {
         return new Auth();
-    }
+    },
+
+    Flash::class => function(ContainerInterface $c)
+    {
+      return new Flash();
+    },
 ];
