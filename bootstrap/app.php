@@ -8,6 +8,7 @@
 
 
 use Epguides\App;
+use Epguides\Middleware\CsrfViewMiddleware;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Respect\Validation\Validator as v;
 use Slim\Csrf\Guard;
@@ -37,7 +38,7 @@ $capsule->bootEloquent();
 $container = $app->getContainer();
 $app->add(new \Epguides\Middleware\ValidationErrorMiddleware($container));
 $app->add(new \Epguides\Middleware\OldInputMiddleware($container));
-$app->add(new \Epguides\Middleware\OldInputMiddleware($container));
+$app->add(new CsrfViewMiddleware($container));
 try {
 	$app->add($container->get(Guard::class));
 } catch (\Psr\Container\NotFoundExceptionInterface $e) {
