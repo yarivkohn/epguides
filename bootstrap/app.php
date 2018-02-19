@@ -9,6 +9,8 @@
 
 use Epguides\App;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Respect\Validation\Validator as v;
+
 
 session_start();
 
@@ -33,6 +35,7 @@ $capsule->bootEloquent();
 
 $container = $app->getContainer();
 $app->add(new \Epguides\Middleware\ValidationErrorMiddleware($container));
-
+$app->add(new \Epguides\Middleware\OldInputMiddleware($container));
+v::with('Epguides\Validation\Rules');
 
 require_once  __DIR__.DS.'..'.DS.'app'.DS.'routes.php';

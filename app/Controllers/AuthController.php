@@ -29,7 +29,7 @@ class AuthController
 		{
 
 		    $validator->validator($request, [
-		        'email' => v::email(),
+		        'email' => v::notEmpty()->noWhitespace()->email()->emailAvailable(),
 		        'name' => v::notEmpty()->alpha(),
 		        'password' =>  v::noWhitespace()->notEmpty(),
             ]);
