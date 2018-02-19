@@ -39,4 +39,11 @@ class Auth
 
         return false;
     }
+
+    public function logOut()
+    {
+        if(isset($_SESSION['user'])){
+            unset($_SESSION['user']);
+        }
+    }
 }

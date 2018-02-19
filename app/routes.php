@@ -12,6 +12,7 @@ $app->get('/all', ['Epguides\Controllers\HomeController', 'showAll'])->setName('
 $app->get('/update', ['Epguides\Controllers\DbController', 'update'])->setName('updateDb');
 $app->get('/auth/signup', ['Epguides\Controllers\AuthController', 'getSignUp'])->setName('auth.signup');
 $app->get('/auth/signin', ['Epguides\Controllers\AuthController', 'getSignIn'])->setName('auth.signin');
+$app->get('/auth/signout', ['Epguides\Controllers\AuthController', 'getSignOut'])->setName('auth.signout');
 
 $app->get('/old', ['Epguides\Controllers\OldController', 'index'])->setName('backwardCompatibility');
 

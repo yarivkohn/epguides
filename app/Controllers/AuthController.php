@@ -12,6 +12,7 @@ namespace Epguides\Controllers;
 use Epguides\Auth\Auth;
 use Epguides\Models\User;
 use Epguides\Validation\Validator;
+use Illuminate\Contracts\Pagination\Paginator;
 use Respect\Validation\Validator as v;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -20,6 +21,13 @@ use Slim\Views\Twig;
 
 class AuthController
 {
+
+    public function getSignOut(Request $request, Response $response, Auth $auth, Router $router)
+    {
+       $auth->logOut();
+       return $response->withRedirect($router->pathFor('auth.signin'));
+
+    }
 
     public function getSignUp(Request $request, Response $response, Twig $view)
     {
@@ -31,7 +39,7 @@ class AuthController
         return $view->render($response, 'auth/signin.twig');
     }
 
-    public function postSignUp(Request $request, Response $response, Router $router, Validator $validator)
+    public function postSignUp(Request $request, Response $response, Router $router, Validator $validator, Auth $auth)
     {
 
         $validator->validator($request, [
@@ -51,6 +59,11 @@ class AuthController
                 'email' => $request->getParam('email'),
                 'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
             ]
+        );
+
+        $auth->attempt(
+            $request->getParam('email'),
+            $request->getParam('password')
         );
 
         return $response->withRedirect($router->pathFor('home'));
