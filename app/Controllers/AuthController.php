@@ -9,6 +9,7 @@
 namespace Epguides\Controllers;
 
 
+use Epguides\Auth\Auth;
 use Epguides\Models\User;
 use Epguides\Validation\Validator;
 use Respect\Validation\Validator as v;
@@ -20,36 +21,67 @@ use Slim\Views\Twig;
 class AuthController
 {
 
-		public function getSignUp(Request $request, Response $response, Twig $view)
-		{
-			return $view->render($response, 'auth/signup.twig');
-		}
+    public function getSignUp(Request $request, Response $response, Twig $view)
+    {
+        return $view->render($response, 'auth/signup.twig');
+    }
 
-		public function postSignUp(Request $request, Response $response, Router $router, Validator $validator)
-		{
+    public function getSignIn(Request $request, Response $response, Twig $view)
+    {
+        return $view->render($response, 'auth/signin.twig');
+    }
 
-		    $validator->validator($request, [
-		        'email' => v::notEmpty()->noWhitespace()->email()->emailAvailable(),
-		        'name' => v::notEmpty()->alpha(),
-		        'password' =>  v::noWhitespace()->notEmpty(),
-            ]);
+    public function postSignUp(Request $request, Response $response, Router $router, Validator $validator)
+    {
 
-		    if($validator->failed()){
-                return $response->withRedirect($router->pathFor('auth.signup') );
-            }
+        $validator->validator($request, [
+            'email' => v::notEmpty()->noWhitespace()->email()->emailAvailable(),
+            'name' => v::notEmpty()->alpha(),
+            'password' => v::noWhitespace()->notEmpty(),
+        ]);
 
-			$user= new User();
-			$user->create(
-				[
-					'name' => $request->getParam('name'),
-					'email' => $request->getParam('email'),
-					'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
-				]
-			);
+        if ($validator->failed()) {
+            return $response->withRedirect($router->pathFor('auth.signup'));
+        }
 
-			return $response->withRedirect($router->pathFor('home') );
+        $user = new User();
+        $user->create(
+            [
+                'name' => $request->getParam('name'),
+                'email' => $request->getParam('email'),
+                'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
+            ]
+        );
 
-		}
+        return $response->withRedirect($router->pathFor('home'));
+
+    }
+
+    public function postSignIn(Request $request, Response $response, Router $router, Validator $validator, Auth $auth)
+    {
+
+        $validator->validator($request, [
+            'email' => v::notEmpty()->noWhitespace()->email(),
+            'password' => v::noWhitespace()->notEmpty(),
+        ]);
+
+        if ($validator->failed()) {
+            return $response->withRedirect($router->pathFor('auth.signin'));
+        }
+
+        $success = $auth->attempt(
+            $request->getParam('email'),
+            $request->getParam('password')
+        );
+
+        if(false === $success){
+            return $response->withRedirect($router->pathFor('auth.signin'));
+        }
+
+        return $response->withRedirect($router->pathFor('home'));
+
+    }
+
 
 }
 

@@ -6,6 +6,7 @@
  * Time: 8:20 AM
  */
 
+use Epguides\Auth\Auth;
 use Epguides\Models\Episode;
 use Epguides\Models\Show;
 use Epguides\Validation\Validator;
@@ -26,6 +27,12 @@ return [
             $c->get('router'),
             $c->get('request')->getUri()
         ));
+
+        $twig->getEnvironment()->addGlobal('auth', [
+            'check' => $c->get(Auth::class)->isLoggedIn(),
+            'user' => $c->get(Auth::class)->user(),
+        ]);
+
         $twig->addExtension(new Twig_Extension_Debug());
         return $twig;
     },
@@ -50,5 +57,10 @@ return [
     Guard::class => function(ContainerInterface $c)
     {
     	return new Guard();
+    },
+
+    Auth::class => function(ContainerInterface $c)
+    {
+        return new Auth();
     }
 ];
