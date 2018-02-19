@@ -10,6 +10,7 @@
 use Epguides\App;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Respect\Validation\Validator as v;
+use Slim\Csrf\Guard;
 
 
 session_start();
@@ -36,6 +37,15 @@ $capsule->bootEloquent();
 $container = $app->getContainer();
 $app->add(new \Epguides\Middleware\ValidationErrorMiddleware($container));
 $app->add(new \Epguides\Middleware\OldInputMiddleware($container));
+$app->add(new \Epguides\Middleware\OldInputMiddleware($container));
+try {
+	$app->add($container->get(Guard::class));
+} catch (\Psr\Container\NotFoundExceptionInterface $e) {
+	//TODO: log error
+} catch (\Psr\Container\ContainerExceptionInterface $e) {
+	//TODO: log error
+}
+
 v::with('Epguides\Validation\Rules');
 
 require_once  __DIR__.DS.'..'.DS.'app'.DS.'routes.php';

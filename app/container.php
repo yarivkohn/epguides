@@ -11,6 +11,7 @@ use Epguides\Models\Show;
 use Epguides\Validation\Validator;
 use Interop\Container\ContainerInterface;
 use Epguides\Models\ViewAll;
+use Slim\Csrf\Guard;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 
@@ -44,5 +45,10 @@ return [
     Validator::class => function(ContainerInterface $c)
     {
         return new Validator();
+    },
+
+    Guard::class => function(ContainerInterface $c)
+    {
+    	return new Guard();
     }
 ];
