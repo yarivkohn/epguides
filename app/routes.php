@@ -22,5 +22,5 @@ $app->get('/old', ['Epguides\Controllers\OldController', 'index'])->setName('bac
 //HTTP POST ACTIONS
 $app->post('/auth/signup', ['Epguides\Controllers\AuthController', 'postSignUp']);
 $app->post('/auth/signin', ['Epguides\Controllers\AuthController', 'postSignIn']);
-$app->post('/auth/password/change', ['Epguides\Controllers\PasswordController', 'postChangePass']);
+$app->post('/auth/password/change', ['Epguides\Controllers\PasswordController', 'postChangePassword']);
 

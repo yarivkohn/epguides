@@ -27,8 +27,22 @@ class PasswordController
             $view->render($response, 'auth/changePass.twig');
         }
 
-        public function postChangePassword(Request $request, Response $response)
+        public function postChangePassword(Request $request, Response $response, Validator $validator, Flash $flash, Router $router, Auth $auth)
         {
+            $validator->validator($request, [
+                'cpassword' => v::noWhitespace()->notEmpty()->matchesPassword($auth->user()->password),
+                'password' => v::noWhitespace()->notEmpty(),
+            ]);
+
+            if($validator->failed()){
+                $flash->addMessage('error', 'Password was not changed. Please check you data and try again.');
+                return $response->withRedirect($router->pathFor('auth.password.change'));
+            }
+
+            $flash->addMessage('success', 'Password has changed.');
+            return $response->withRedirect($router->pathFor('home'));
+
+
 
         }
 }
