@@ -31,7 +31,23 @@ class HomeController {
 	}
 
 	/**
-	 * Return list of all shows exist in Db
+	 * Return list of all watched shows exist in Db
+	 *
+	 * @param Request  $request
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @return Response
+	 */
+	public function showFavorite(Request $request, Response $response, Twig $view) {
+		$model          = new Episode();
+		$listOfAllShows = $model->getFollowedShows(TRUE);
+
+		return $this->drawView($response, $view, $listOfAllShows);
+	}
+
+
+	/**
+	 * Return list of all shows from API
 	 *
 	 * @param Request  $request
 	 * @param Response $response
@@ -40,10 +56,13 @@ class HomeController {
 	 */
 	public function showAll(Request $request, Response $response, Twig $view) {
 		$model          = new Episode();
-		$listOfAllShows = $model->getFollowedShows(TRUE);
+		$listOfAllShows = $model->getAllShows();
 
-		return $this->drawView($response, $view, $listOfAllShows);
+		return $view->render($response, 'show/add.twig', [
+			'followed' => $listOfAllShows,
+		]);
 	}
+
 
 	/**
 	 * Draw the view with relevant shows
@@ -54,7 +73,7 @@ class HomeController {
 	 * @return Response
 	 */
 	private function drawView(Response $response, Twig $view, $listOfAllShows) {
-		return $view->render($response, 'followed.twig', [
+		return $view->render($response, 'show/followed.twig', [
 			'followed' => $listOfAllShows,
 		]);
 	}

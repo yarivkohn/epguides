@@ -2,6 +2,7 @@
 
 namespace Epguides\Models;
 
+use Epguides\Api\EpguidesApi;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,4 +21,15 @@ class Show extends Model
 	public function episode(){
 		return $this->belongsTo(Episode::class);
 	}
+
+	/**
+	 * Return full list of available shows from API
+	 * @return mixed
+	 */
+	public function getAll() {
+		$epguidesApi = new EpguidesApi();
+		return $epguidesApi->getAllShows();
+	}
+
+
 }

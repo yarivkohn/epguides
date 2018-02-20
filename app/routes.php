@@ -20,9 +20,10 @@ $app->group('', function() use($app){
 
     //HTTP AUTH GET ACTIONS
     $app->get('/', ['Epguides\Controllers\HomeController', 'show'])->setName('home');
-    $app->get('/all', ['Epguides\Controllers\HomeController', 'showAll'])->setName('unfiltered');
-    $app->get('/auth/signout', ['Epguides\Controllers\AuthController', 'getSignOut'])->setName('auth.signout');
-    $app->get('/auth/password/change', ['Epguides\Controllers\PasswordController', 'getChangePassword'])
+    $app->get('/show/favorite', ['Epguides\Controllers\HomeController', 'showFavorite'])->setName('show.unfiltered');
+	$app->get('/show/add',['Epguides\Controllers\HomeController','showAll'])->setName('show.add.new');
+	$app->get('/auth/signout', ['Epguides\Controllers\AuthController', 'getSignOut'])->setName('auth.signout');
+	$app->get('/auth/password/change', ['Epguides\Controllers\PasswordController', 'getChangePassword'])
         ->setName('auth.password.change');
 
     $app->get('/old', ['Epguides\Controllers\OldController', 'index'])->setName('backwardCompatibility');

@@ -40,6 +40,17 @@ class Episode extends Model
         return $list;
     }
 
+	public function getAllShows()
+	{
+		$list = [];
+		$show = new Show();
+		foreach ($show->getAll() as $show) {
+			$list[$show->title] = $this->createAddEpisodeObject((array)$show);
+//			$list[] = $this->createAddEpisodeObject((array)$show);
+		}
+		sort($list);
+		return $list;
+	}
 
     /**
      * Return list of episodes with their data
@@ -86,7 +97,22 @@ class Episode extends Model
     }
 
 
-    /**
+	/**
+	 * @param $episodeData
+	 * @return \stdClass
+	 */
+	private function createAddEpisodeObject($episodeData)
+	{
+		$episode = new \stdClass();
+		$episode->name = $episodeData['title'];
+		$episode->epguideName = $episodeData['epguide_name'];
+		$episode->imdb = $episodeData['imdb_id'];
+		$this->addDisplayDecorations($episode);
+		return $episode;
+	}
+
+
+	/**
      * If episode was released in the past week, add "is_new" tag.
      * If episode was released more than a week ago but less than 2 weeks, add "getting_older" tag.
      *
@@ -94,17 +120,19 @@ class Episode extends Model
      */
     private function isNewRelease($episode)
     {
-        $today = new \DateTime();
-        $releaseDate = date_create_from_format('Y-m-d', $episode->release_date);
-        if (isset($releaseDate) && $releaseDate !== false) {
-            $diff = $today->diff($releaseDate);
-            if ($diff->days > 0 && $diff->days < 7) {
-                $episode->is_new = TRUE;
-            }
-            if ($diff->days >= 7 && $diff->days < 14) {
-                $episode->is_getting_older = TRUE;
-            }
-        }
+    	if(isset($episode->release_date)){
+		    $today = new \DateTime();
+		    $releaseDate = date_create_from_format('Y-m-d', $episode->release_date);
+		    if (isset($releaseDate) && $releaseDate !== false) {
+			    $diff = $today->diff($releaseDate);
+			    if ($diff->days > 0 && $diff->days < 7) {
+				    $episode->is_new = TRUE;
+			    }
+			    if ($diff->days >= 7 && $diff->days < 14) {
+				    $episode->is_getting_older = TRUE;
+			    }
+		    }
+	    }
     }
 
     /**
@@ -115,14 +143,16 @@ class Episode extends Model
      */
     private function isReleaseDateClose($episode)
     {
-        $today = new \DateTime();
-        $releaseDate = date_create_from_format('Y-m-d', $episode->release_date);
-        if (isset($releaseDate) && $releaseDate !== false) {
-            $diff = $today->diff($releaseDate);
-            if ($diff->days < 3) {
-                $episode->almost_released = TRUE;
-            }
-        }
+    	if(isset($episode->release_date)){
+		    $today = new \DateTime();
+		    $releaseDate = date_create_from_format('Y-m-d', $episode->release_date);
+		    if (isset($releaseDate) && $releaseDate !== false) {
+			    $diff = $today->diff($releaseDate);
+			    if ($diff->days < 3) {
+				    $episode->almost_released = TRUE;
+			    }
+		    }
+	    }
     }
 
     /**
@@ -130,7 +160,11 @@ class Episode extends Model
      */
     private function addDisplayDecorations($episode)
     {
-        $this->isNewRelease($episode->lastEpisode);
-        $this->isReleaseDateClose($episode->nextEpisode);
+    	if(isset($episode->lastEpisode)){
+		    $this->isNewRelease($episode->lastEpisode);
+	    }
+        if(isset($episode->nextEpisode)){
+	        $this->isReleaseDateClose($episode->nextEpisode);
+        }
     }
 }
