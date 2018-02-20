@@ -15,6 +15,11 @@ use Illuminate\Database\Eloquent\Model;
 class Show extends Model
 {
 
+	protected $fillable = [
+		'name',
+		'api_id',
+	];
+
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
@@ -31,5 +36,9 @@ class Show extends Model
 		return $epguidesApi->getAllShows();
 	}
 
+	public function addNewShowToWatchList($showId, $showName)
+	{
+
+	}
 
 }

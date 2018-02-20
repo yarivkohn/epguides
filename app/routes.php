@@ -21,7 +21,8 @@ $app->group('', function() use($app){
     //HTTP AUTH GET ACTIONS
     $app->get('/', ['Epguides\Controllers\HomeController', 'show'])->setName('home');
     $app->get('/show/favorite', ['Epguides\Controllers\HomeController', 'showFavorite'])->setName('show.unfiltered');
-	$app->get('/show/add',['Epguides\Controllers\HomeController','showAll'])->setName('show.add.new');
+	$app->get('/show/all',['Epguides\Controllers\HomeController','showAll'])->setName('show.all');
+	$app->get('/show/add/{showName}/{apiId}',['Epguides\Controllers\DbController','addNewShowToWatchList'])->setName('show.add.new');
 	$app->get('/auth/signout', ['Epguides\Controllers\AuthController', 'getSignOut'])->setName('auth.signout');
 	$app->get('/auth/password/change', ['Epguides\Controllers\PasswordController', 'getChangePassword'])
         ->setName('auth.password.change');

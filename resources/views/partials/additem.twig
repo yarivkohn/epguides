@@ -4,7 +4,7 @@
         <ul>
             <li>See on <a href="http://epguides.com/{{ show.epguideName }}">Epguides</a></li>
             <li>See on <a href="http://www.imdb.com/title/{{ show.imdb }}">IMDB</a></li>
-            <li>Add to watchlist <a href="#">here</a></li>
+            <li><a href="{{ path_for('show.add.new', { showName: show.name, apiId: show.epguideName}) }}">Add</a> to watchlist</li>
         </ul>
 
     </div>
