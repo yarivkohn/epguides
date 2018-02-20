@@ -16,37 +16,39 @@ use Slim\Csrf\Guard;
 
 session_start();
 
-require_once  __DIR__.DS.'..'.DS.'vendor'.DS.'autoload.php';
+require_once __DIR__ . DS . '..' . DS . 'vendor' . DS . 'autoload.php';
 
 $app = new App;
 
 $capsule = new Capsule();
 $capsule->addConnection([
-	'driver' => 'mysql',
-	'host' => 'localhost',
-	'database' => 'epguides',
-	'username' => 'root',
-	'password' => 'root',
-	'charset' => 'utf8',
-	'collation' => 'utf8_unicode_ci',
-	//    'prefix' => 'some_prefix'
+    'driver' => 'mysql',
+    'host' => 'localhost',
+    'database' => 'epguides',
+    'username' => 'root',
+    'password' => 'root',
+    'charset' => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    //    'prefix' => 'some_prefix'
 ]);
 
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 $container = $app->getContainer();
-$app->add(new \Epguides\Middleware\ValidationErrorMiddleware($container));
-$app->add(new \Epguides\Middleware\OldInputMiddleware($container));
-$app->add(new CsrfViewMiddleware($container));
 try {
-	$app->add($container->get(Guard::class));
+    $app->add(new \Epguides\Middleware\ValidationErrorMiddleware($container));
+    $app->add(new \Epguides\Middleware\OldInputMiddleware($container));
+    $app->add(new CsrfViewMiddleware($container));
+    $app->add($container->get(Guard::class));
 } catch (\Psr\Container\NotFoundExceptionInterface $e) {
-	//TODO: log error
+    //TODO: log error
 } catch (\Psr\Container\ContainerExceptionInterface $e) {
-	//TODO: log error
+    //TODO: log error
+} catch (Exception $e){
+    //TODO: log error
 }
 
 v::with('Epguides\Validation\Rules');
 
-require_once  __DIR__.DS.'..'.DS.'app'.DS.'routes.php';
+require_once __DIR__ . DS . '..' . DS . 'app' . DS . 'routes.php';
