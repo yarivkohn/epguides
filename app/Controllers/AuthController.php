@@ -12,12 +12,12 @@ namespace Epguides\Controllers;
 use Epguides\Auth\Auth;
 use Epguides\Models\User;
 use Epguides\Validation\Validator;
-use Illuminate\Contracts\Pagination\Paginator;
 use Respect\Validation\Validator as v;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Router;
 use Slim\Views\Twig;
+use Slim\Flash\Messages as Flash;
 
 class AuthController
 {
@@ -39,7 +39,7 @@ class AuthController
         return $view->render($response, 'auth/signin.twig');
     }
 
-    public function postSignUp(Request $request, Response $response, Router $router, Validator $validator, Auth $auth)
+    public function postSignUp(Request $request, Response $response, Router $router, Validator $validator, Auth $auth, Flash $flash)
     {
 
         $validator->validator($request, [
@@ -49,6 +49,7 @@ class AuthController
         ]);
 
         if ($validator->failed()) {
+            $flash->addMessage('error', 'Sign up failed. Please check you data and try again.');
             return $response->withRedirect($router->pathFor('auth.signup'));
         }
 
@@ -66,11 +67,12 @@ class AuthController
             $request->getParam('password')
         );
 
+        $flash->addMessage('success', 'You have been signed up successfully');
         return $response->withRedirect($router->pathFor('home'));
 
     }
 
-    public function postSignIn(Request $request, Response $response, Router $router, Validator $validator, Auth $auth)
+    public function postSignIn(Request $request, Response $response, Router $router, Validator $validator, Auth $auth, Flash $flash)
     {
 
         $validator->validator($request, [
@@ -88,6 +90,8 @@ class AuthController
         );
 
         if(false === $success){
+            $flash->addMessage('error', 'Incorrect username or password');
+
             return $response->withRedirect($router->pathFor('auth.signin'));
         }
 

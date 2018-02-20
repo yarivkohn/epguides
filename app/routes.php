@@ -13,6 +13,8 @@ $app->get('/update', ['Epguides\Controllers\DbController', 'update'])->setName('
 $app->get('/auth/signup', ['Epguides\Controllers\AuthController', 'getSignUp'])->setName('auth.signup');
 $app->get('/auth/signin', ['Epguides\Controllers\AuthController', 'getSignIn'])->setName('auth.signin');
 $app->get('/auth/signout', ['Epguides\Controllers\AuthController', 'getSignOut'])->setName('auth.signout');
+$app->get('/auth/password/change', ['Epguides\Controllers\PasswordController', 'getChangePassword'])
+    ->setName('auth.password.change');
 
 $app->get('/old', ['Epguides\Controllers\OldController', 'index'])->setName('backwardCompatibility');
 
@@ -20,4 +22,5 @@ $app->get('/old', ['Epguides\Controllers\OldController', 'index'])->setName('bac
 //HTTP POST ACTIONS
 $app->post('/auth/signup', ['Epguides\Controllers\AuthController', 'postSignUp']);
 $app->post('/auth/signin', ['Epguides\Controllers\AuthController', 'postSignIn']);
+$app->post('/auth/password/change', ['Epguides\Controllers\PasswordController', 'postChangePass']);
 

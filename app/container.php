@@ -34,6 +34,8 @@ return [
             'user' => $c->get(Auth::class)->user(),
         ]);
 
+        $twig->getEnvironment()->addGlobal('flash', $c->get(Flash::class));
+
         $twig->addExtension(new Twig_Extension_Debug());
         return $twig;
     },
