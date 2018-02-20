@@ -39,11 +39,9 @@ class PasswordController
                 return $response->withRedirect($router->pathFor('auth.password.change'));
             }
 
+            $auth->user()->setPassword($request->getParam('password'));
             $flash->addMessage('success', 'Password has changed.');
             return $response->withRedirect($router->pathFor('home'));
-
-
-
         }
 }
 
