@@ -15,8 +15,9 @@ use Illuminate\Database\QueryException;
 class EpisodesDb {
 
 	private $_api;
-    private $_model;
+    private $_showModel;
     private $_smsHandler;
+    private $_episodeModel;
 
 	/**
 	 * EpisodesDb constructor.
@@ -26,9 +27,13 @@ class EpisodesDb {
         if(!$this->_api){
             $this->_api = new EpguidesApi();
         }
-        if(!$this->_model){
-        	$this->_model = new Show();
+        if(!$this->_showModel){
+        	$this->_showModel = new Show();
         }
+
+	    if(!$this->_episodeModel){
+		    $this->_episodeModel = new Episode();
+	    }
 
         if(!$this->_smsHandler){
         	$this->_smsHandler = new SmsSender();
@@ -45,7 +50,7 @@ class EpisodesDb {
             foreach($this->getListOfShows() as $name => $showCode){
                 $show = new \stdClass();
                 $show->name = $name;
-	            $showId = $this->_model->where('api_id', $showCode )->first(['id'])->getAttributeValue('id');
+	            $showId = $this->_showModel->where('api_id', $showCode )->first(['id'])->getAttributeValue('id');
 	            $show->lastEpisode = $this->_api->lastEpisode($showCode);
 	            $show->nextEpisode = $this->_api->nextEpisode($showCode);
 	            $this->writeEpisodeToDb($show, $showId);
@@ -55,13 +60,31 @@ class EpisodesDb {
     }
 
 	/**
+	 * @param $showName
+	 * @throws \Exception
+	 */
+	public function removeShowAndEpisode($showName) {
+		EloquentDb::beginTransaction();
+		try {
+			$show = $this->_showModel->where('name', $showName)->first();
+			$this->_episodeModel->where('show_id', $show->getAttribute('id'))->delete();
+			$show->delete();
+			EloquentDb::commit();
+		} catch (\Exception $e) {
+			EloquentDb::rollback();
+			throw new \Exception('failed to delete show data due to: '.$e->getMessage());
+		}
+	}
+
+
+	/**
 	 * Return list of all shows being followed
 	 * @return array
 	 */
 	private function getListOfShows()
     {
     	$formattedArray = array();
-    	$shows = $this->_model->all()->toArray();
+    	$shows = $this->_showModel->all()->toArray();
 	    foreach($shows as $show){
 	    	$formattedArray[$show['name']] = $show['api_id'];
 	    }
@@ -93,7 +116,7 @@ class EpisodesDb {
 		}
 		try {
 			$episodeData->delete();
-			$this->_model->episode()->create(
+			$this->_showModel->episode()->create(
 				array_merge($attributes, array('sms_sent'=> 0))
 			);
 		} catch (QueryException $e) {

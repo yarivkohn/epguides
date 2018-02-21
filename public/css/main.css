@@ -52,3 +52,9 @@ h4 {
 	color: #340926;
 	font-size: 2em;
 }
+
+.btn-close>b>a {
+	padding-right: 8px;
+	color: #CBE432;
+	text-decoration: none;
+}

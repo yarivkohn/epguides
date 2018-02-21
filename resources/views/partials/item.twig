@@ -1,8 +1,8 @@
 <div class="thumbnail">
     <div class="caption">
-        <h4 class="text-center">{{ show.show_name }}</h4>
+        <h4 class="text-center">{{ show.show_name }}<span class="pull-right btn-close"><b><a href="{{ path_for('show.remove', { showName: show.show_name}) }}">X</a></b></span></h4>
         <ul>
-            <li>Episode name: {{ show.name }}</li>
+            <li>Episode name: {{ show.name }} </li>
             <li>Last release: Season {{ show.lastEpisode.season }}, Episode: {{ show.lastEpisode.number }} </li>
             <li class="{% if show.lastEpisode.is_new %} new-release{% endif %}
                   {% if show.lastEpisode.is_getting_older %} getting-old {% endif %}">

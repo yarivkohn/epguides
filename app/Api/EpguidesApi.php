@@ -16,8 +16,10 @@ class EpguidesApi
 {
 
     const EPGUIDES_API_URL = 'http://epguides.frecar.no/show/';
+	const CACHE_FILE       = __DIR__.DS.'..'.DS.'..'.DS.'resources'.DS.'cache'.DS.'fulllist.json';
+	const CACHE_LIFE_TIME  = 60 * 60 * 24; // 24 Hrs
 
-    private $httpCode;
+	private $httpCode;
     private $responseBody;
 
 	/**
@@ -97,8 +99,16 @@ class EpguidesApi
      */
     public function getAllShows()
     {
-        $url = self::EPGUIDES_API_URL;
-        $result = json_decode($this->sendApiRequest($url));
-        return $result;
+    	$now = time();
+        if(file_exists(self::CACHE_FILE) &&
+	        is_readable(self::CACHE_FILE) &&
+	        ($now - filemtime(self::CACHE_FILE) < self::CACHE_LIFE_TIME) ) {
+        	$result = file_get_contents(self::CACHE_FILE);
+        } else {
+	        $url = self::EPGUIDES_API_URL;
+	        $result = $this->sendApiRequest($url);
+	        file_put_contents(self::CACHE_FILE, $result);
+        }
+        return json_decode($result);
     }
 }

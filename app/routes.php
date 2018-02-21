@@ -22,7 +22,10 @@ $app->group('', function() use($app){
     $app->get('/', ['Epguides\Controllers\HomeController', 'show'])->setName('home');
     $app->get('/show/favorite', ['Epguides\Controllers\HomeController', 'showFavorite'])->setName('show.unfiltered');
 	$app->get('/show/all',['Epguides\Controllers\HomeController','showAll'])->setName('show.all');
+
 	$app->get('/show/add/{showName}/{apiId}',['Epguides\Controllers\DbController','addNewShowToWatchList'])->setName('show.add.new');
+	$app->get('/show/delete/{showName}',['Epguides\Controllers\DbController','removeShowFromWatchList'])->setName('show.remove');
+
 	$app->get('/auth/signout', ['Epguides\Controllers\AuthController', 'getSignOut'])->setName('auth.signout');
 	$app->get('/auth/password/change', ['Epguides\Controllers\PasswordController', 'getChangePassword'])
         ->setName('auth.password.change');
