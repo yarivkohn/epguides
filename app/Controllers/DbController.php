@@ -49,7 +49,8 @@ class DbController
     {
 		$show->create([
 			'name' => $showName,
-			'api_id' => $apiId
+			'api_id' => $apiId,
+            'user_id' => $_SESSION['user'],
 		]);
 
 		$flash->addMessage('info', "{$showName} successfully added to your list. Please update in order to see new shows.");

@@ -67,7 +67,8 @@ class Episode extends Model
                 'episodes.next_episode_season',
                 'episodes.next_episode_number',
                 'episodes.next_episode_release_date',
-                'shows.name as show_name');
+                'shows.name as show_name')
+        ->where('user_id','=', $_SESSION['user']);
         if (!$showAll) {
             $episodeList->whereNotNull('next_episode_release_date');
         }

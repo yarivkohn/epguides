@@ -18,6 +18,7 @@ class Show extends Model
 	protected $fillable = [
 		'name',
 		'api_id',
+        'user_id',
 	];
 
 	/**
