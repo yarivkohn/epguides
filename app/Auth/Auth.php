@@ -34,6 +34,10 @@ class Auth
 
         if(password_verify($password, $user->password)){
             $_SESSION['user'] = $user->id;
+            $user->update([
+                'last_login' => Date('Y-m-d H:i:s'),
+                'user_ip' => ip2long($_SERVER['REMOTE_ADDR']),
+            ]);
             return true;
         }
 
