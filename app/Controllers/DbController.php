@@ -64,14 +64,17 @@ class DbController
 	 * @param Response $response
 	 * @param Router   $router
 	 * @param Flash    $flash
+     * @param Show $show
 	 * @param EpisodesDb  $episodesDb
 	 * @return mixed
 	 */
-	public function removeShowFromWatchList($showName, Request $request, Response $response, Router $router, Flash $flash, EpisodesDb $episodesDb)
+	public function removeShowFromWatchList($showName, Request $request, Response $response, Router $router, Flash $flash, Show $show, EpisodesDb $episodesDb)
     {
 	    try{
 		    $episodesDb->removeShowAndEpisode($showName);
-	    } catch(\Exception $e){
+//  			$show = $show->where(['name'=> $showName])->where('user_id', $_SESSION['user'])->first();
+//            $show->delete();
+        } catch(\Exception $e){
 		 	$flash->addMessage('error', "failed to removed from {$showName} your list");
 		    //TODO: log error
 		    return $response->withRedirect($router->pathFor('home') );

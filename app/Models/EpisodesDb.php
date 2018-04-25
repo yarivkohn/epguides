@@ -50,7 +50,13 @@ class EpisodesDb {
             foreach($this->getListOfShows() as $name => $showCode){
                 $show = new \stdClass();
                 $show->name = $name;
-	            $showId = $this->_showModel->where('api_id', $showCode )->first(['id'])->getAttributeValue('id');
+	            $show = $this->_showModel->where('api_id', $showCode )
+                    ->where('user_id', $_SESSION['user'])
+                    ->first(['id']);
+	            if(empty($show)){
+	                continue;
+                }
+	            $showId = $show->getAttributeValue('id');
 	            $show->lastEpisode = $this->_api->lastEpisode($showCode);
 	            $show->nextEpisode = $this->_api->nextEpisode($showCode);
 	            $this->writeEpisodeToDb($show, $showId);
@@ -66,7 +72,9 @@ class EpisodesDb {
 	public function removeShowAndEpisode($showName) {
 		EloquentDb::beginTransaction();
 		try {
-			$show = $this->_showModel->where('name', $showName)->first();
+			$show = $this->_showModel->where('name', $showName)
+                ->where('user_id', $_SESSION['user'])
+                ->first();
 			$this->_episodeModel->where('show_id', $show->getAttribute('id'))->delete();
 			$show->delete();
 			EloquentDb::commit();

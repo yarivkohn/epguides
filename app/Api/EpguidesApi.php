@@ -107,7 +107,9 @@ class EpguidesApi
         } else {
 	        $url = self::EPGUIDES_API_URL;
 	        $result = $this->sendApiRequest($url);
-	        file_put_contents(self::CACHE_FILE, $result);
+	        if(!empty($result)){
+                file_put_contents(self::CACHE_FILE, $result);
+            }
         }
         return json_decode($result);
     }
