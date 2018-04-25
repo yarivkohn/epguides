@@ -19,6 +19,7 @@ class Show extends Model
 		'name',
 		'api_id',
         'user_id',
+		'imdb_id',
 	];
 
 	/**

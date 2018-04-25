@@ -67,7 +67,8 @@ class Episode extends Model
                 'episodes.next_episode_season',
                 'episodes.next_episode_number',
                 'episodes.next_episode_release_date',
-                'shows.name as show_name')
+                'shows.name as show_name',
+	            'shows.imdb_id' )
         ->where('user_id','=', $_SESSION['user']);
         if (!$showAll) {
             $episodeList->whereNotNull('next_episode_release_date');
@@ -81,11 +82,17 @@ class Episode extends Model
      */
     private function createEpisodeObject($episodeData)
     {
+    	$imdbData = base64_encode(implode(',',[
+    		'season' => $episodeData['last_episode_season'],
+		    'episode' =>$episodeData['last_episode_number'],
+		    'imdb_id' => $episodeData['imdb_id']
+	    ]));
         $episode = new \stdClass();
         $episode->lastEpisode = new \stdClass();
         $episode->nextEpisode = new \stdClass();
         $episode->name = $episodeData['name'];
         $episode->show_name = $episodeData['show_name'];
+        $episode->episodeData = $imdbData;
         $episode->lastEpisode->season = $episodeData['last_episode_season'];
         $episode->lastEpisode->number = $episodeData['last_episode_number'];
         $episode->lastEpisode->release_date = $episodeData['last_episode_release_date'];

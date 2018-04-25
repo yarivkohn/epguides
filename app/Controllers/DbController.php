@@ -45,12 +45,13 @@ class DbController
 	 * @param Flash    $flash
 	 * @return mixed
 	 */
-	public function addNewShowToWatchList($showName, $apiId, Request $request, Response $response, Show $show, Router $router, Flash $flash)
+	public function addNewShowToWatchList($showName, $apiId, $imdbId, Request $request, Response $response, Show $show, Router $router, Flash $flash)
     {
 		$show->create([
 			'name' => $showName,
 			'api_id' => $apiId,
             'user_id' => $_SESSION['user'],
+			'imdb_id' => $imdbId,
 		]);
 
 		$flash->addMessage('info', "{$showName} successfully added to your list. Please update in order to see new shows.");

@@ -11,6 +11,7 @@ use Epguides\Middleware\GuestMiddleware;
 //HTTP GET ACTIONS
 
 $app->get('/update', ['Epguides\Controllers\DbController', 'update'])->setName('updateDb');
+$app->get('/eztv/{episodeData}',   ['Epguides\Controllers\TorrentController', 'getMagnetLink'])->setName('eztv.getMagnet');
 
 
 //HTTP POST ACTIONS
@@ -23,7 +24,7 @@ $app->group('', function() use($app){
     $app->get('/show/favorite', ['Epguides\Controllers\HomeController', 'showFavorite'])->setName('show.unfiltered');
 	$app->get('/show/all',['Epguides\Controllers\HomeController','showAll'])->setName('show.all');
 
-	$app->get('/show/add/{showName}/{apiId}',['Epguides\Controllers\DbController','addNewShowToWatchList'])->setName('show.add.new');
+	$app->get('/show/add/{showName}/{apiId}/{imdbId}',['Epguides\Controllers\DbController','addNewShowToWatchList'])->setName('show.add.new');
 	$app->get('/show/delete/{showName}',['Epguides\Controllers\DbController','removeShowFromWatchList'])->setName('show.remove');
 
 	$app->get('/auth/signout', ['Epguides\Controllers\AuthController', 'getSignOut'])->setName('auth.signout');

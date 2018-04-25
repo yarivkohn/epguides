@@ -4,9 +4,9 @@
         <ul>
             <li>Episode name: {{ show.name }} </li>
             <li>Last release: Season {{ show.lastEpisode.season }}, Episode: {{ show.lastEpisode.number }} </li>
-            <li class="{% if show.lastEpisode.is_new %} new-release{% endif %}
+            <li style='display:inline' class="{% if show.lastEpisode.is_new %} new-release{% endif %}
                   {% if show.lastEpisode.is_getting_older %} getting-old {% endif %}">
-                Last release date {{ show.lastEpisode.release_date }}</li>
+                Last release date {{ show.lastEpisode.release_date }}<a href="{{ path_for('eztv.getMagnet', {episodeData: show.episodeData}) }}"><img style='display:inline' src="/image/magnet-icon.png"></a></li>
             <li>Next release: Season {{ show.nextEpisode.season }}, Episode: {{ show.nextEpisode.number }} </li>
             <li class="{% if show.nextEpisode.almost_released %} almost-released {% endif %}"> Next release date {{ show.nextEpisode.release_date }}</li>
         </ul>
