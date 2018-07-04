@@ -87,6 +87,10 @@ class Episode extends Model
 		    'episode' =>$episodeData['last_episode_number'],
 		    'imdb_id' => $episodeData['imdb_id']
 	    ]));
+
+    	$lastEpisodeReleaseDate = new \DateTime($episodeData['last_episode_release_date']);
+    	$nextEpisodeReleaseDate = new \DateTime($episodeData['next_episode_release_date']);
+
         $episode = new \stdClass();
         $episode->lastEpisode = new \stdClass();
         $episode->nextEpisode = new \stdClass();
@@ -95,10 +99,10 @@ class Episode extends Model
         $episode->episodeData = $imdbData;
         $episode->lastEpisode->season = $episodeData['last_episode_season'];
         $episode->lastEpisode->number = $episodeData['last_episode_number'];
-        $episode->lastEpisode->release_date = $episodeData['last_episode_release_date'];
+        $episode->lastEpisode->release_date = $lastEpisodeReleaseDate->format('d/m/Y') ;
         $episode->nextEpisode->season = $episodeData['next_episode_season'];
         $episode->nextEpisode->number = $episodeData['next_episode_number'];
-        $episode->nextEpisode->release_date = $episodeData['next_episode_release_date'];
+        $episode->nextEpisode->release_date = $nextEpisodeReleaseDate->format('d/m/Y');
         $this->addDisplayDecorations($episode);
 
         return $episode;
@@ -130,7 +134,7 @@ class Episode extends Model
     {
     	if(isset($episode->release_date)){
 		    $today = new \DateTime();
-		    $releaseDate = date_create_from_format('Y-m-d', $episode->release_date);
+		    $releaseDate = date_create_from_format('d/m/Y', $episode->release_date);
 		    if (isset($releaseDate) && $releaseDate !== false) {
 			    $diff = $today->diff($releaseDate);
 			    if ($diff->days > 0 && $diff->days < 7) {
@@ -153,7 +157,7 @@ class Episode extends Model
     {
     	if(isset($episode->release_date)){
 		    $today = new \DateTime();
-		    $releaseDate = date_create_from_format('Y-m-d', $episode->release_date);
+		    $releaseDate = date_create_from_format('d/m/Y', $episode->release_date);
 		    if (isset($releaseDate) && $releaseDate !== false) {
 			    $diff = $today->diff($releaseDate);
 			    if ($diff->days < 3) {

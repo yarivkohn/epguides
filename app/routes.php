@@ -11,6 +11,7 @@ use Epguides\Middleware\GuestMiddleware;
 //HTTP GET ACTIONS
 
 $app->get('/eztv/{episodeData}',   ['Epguides\Controllers\TorrentController', 'getMagnetLink'])->setName('eztv.getMagnet');
+$app->get('/update', ['Epguides\Controllers\DbController', 'update'])->setName('updateDb');
 
 
 $app->group('', function() use($app){
@@ -37,7 +38,6 @@ $app->group('', function() use($app){
 
 $app->group('', function() use($app){
     //HTTP GUEST GET ACTIONS
-    $app->get('/update', ['Epguides\Controllers\DbController', 'update'])->setName('updateDb');
     $app->get('/auth/signup', ['Epguides\Controllers\AuthController', 'getSignUp'])->setName('auth.signup');
     $app->get('/auth/signin', ['Epguides\Controllers\AuthController', 'getSignIn'])->setName('auth.signin');
 
