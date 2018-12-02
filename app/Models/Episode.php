@@ -79,6 +79,7 @@ class Episode extends Model
     /**
      * @param $episodeData
      * @return \stdClass
+     * @throws \Exception
      */
     private function createEpisodeObject($episodeData)
     {
@@ -89,7 +90,7 @@ class Episode extends Model
 	    ]));
 
     	$lastEpisodeReleaseDate = new \DateTime($episodeData['last_episode_release_date']);
-    	$nextEpisodeReleaseDate = new \DateTime($episodeData['next_episode_release_date']);
+    	$nextEpisodeReleaseDate = is_null($episodeData['next_episode_release_date'])? null : (new \DateTime($episodeData['next_episode_release_date']))->format('d/m/Y');;
 
         $episode = new \stdClass();
         $episode->lastEpisode = new \stdClass();
@@ -102,7 +103,7 @@ class Episode extends Model
         $episode->lastEpisode->release_date = $lastEpisodeReleaseDate->format('d/m/Y') ;
         $episode->nextEpisode->season = $episodeData['next_episode_season'];
         $episode->nextEpisode->number = $episodeData['next_episode_number'];
-        $episode->nextEpisode->release_date = $nextEpisodeReleaseDate->format('d/m/Y');
+        $episode->nextEpisode->release_date = $nextEpisodeReleaseDate;
         $this->addDisplayDecorations($episode);
 
         return $episode;
