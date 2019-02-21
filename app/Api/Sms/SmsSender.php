@@ -13,11 +13,12 @@ use Epguides\Models\Episode;
 class SmsSender {
 
 	const USER_EMAIL       = 'yariv_kohn@yahoo.com';
-//	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dba'; //correct HASH key
-	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dbaabcder'; //Incorrect HASH key
+	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dba'; //correct HASH key
+//	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dbaabcder'; //Incorrect HASH key
 	const SUBSCRIBER = '972502164884';
+    const KEY_SUCCESS = 'success';
 
-	private $_episodeHandler;
+    private $_episodeHandler;
 	private $_smsHandler;
 
 	/**
@@ -34,11 +35,12 @@ class SmsSender {
 	}
 
 
-	/**
-	 * If this is a new release, sens SMS notification
-	 * @param $episode
-	 * @param $showId
-	 */
+    /**
+     * If this is a new release, sens SMS notification
+     * @param $episode
+     * @param $showId
+     * @throws \Exception
+     */
 	public function sendNewReleaseSms($episode, $showId) {
 		$today       = new \DateTime();
 		$releaseDate = date_create_from_format('Y-m-d', $episode->release_date);
@@ -67,10 +69,13 @@ class SmsSender {
 		try {
 			if(!$messageSent){
 			$text = $episode->show->title. ' S'.$episode->season.'E'.$episode->number.' '. $episode->release_date;
-			file_put_contents('sms.log', date('Y-m-d H:i:s').' - '.$text.PHP_EOL, FILE_APPEND);
-			//TODO: upon next release, need to check what is the result of successful response. Only after successful SMS update Db status.
-//			$result = $this->_smsHandler->sendSms(array(self::SUBSCRIBER), $text, 'New Episode');
-			$episodeData->update(['sms_sent'=> '1']);
+			$result = $this->_smsHandler->sendSms(array(self::SUBSCRIBER), $text, 'New Episode');
+			if (isset($result->status) && $result->status == self::KEY_SUCCESS) {
+			    $isSmsSent = 1;
+            } else {
+			    $isSmsSent = 0;
+            }
+			$episodeData->update(['sms_sent'=> $isSmsSent]);
 			}
 		} catch (\Exception $e) {
 			echo $e->getMessage();
