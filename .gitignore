@@ -1,2 +1,5 @@
 .idea/
 .htaccess
+sms.log
+vendor/
+resources/cache/fulllist.json

@@ -8,13 +8,73 @@
 
 namespace Epguides\Controllers;
 
+use Epguides\Models\Episode;
+use Epguides\Models\User;
 use Slim\Views\Twig;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class HomeController
-{
-    public function index(Request $request, Response $response, Twig $view){
-        return $view->render($response, 'home.twig');
-    }
+class HomeController {
+	/**
+	 * Return list of shows with next release date only
+	 *
+	 * @param Request  $request
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @return Response
+	 */
+	public function show(Request $request, Response $response, Twig $view) {
+		$model          = new Episode();
+		$listOfAllShows = $model->getFollowedShows();
+
+		return $this->drawView($response, $view, $listOfAllShows);
+	}
+
+	/**
+	 * Return list of all watched shows exist in Db
+	 *
+	 * @param Request  $request
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @return Response
+	 */
+	public function showFavorite(Request $request, Response $response, Twig $view) {
+		$model          = new Episode();
+		$listOfAllShows = $model->getFollowedShows(TRUE);
+
+		return $this->drawView($response, $view, $listOfAllShows);
+	}
+
+
+	/**
+	 * Return list of all shows from API
+	 *
+	 * @param Request  $request
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @return Response
+	 */
+	public function showAll(Request $request, Response $response, Twig $view) {
+		$model          = new Episode();
+		$listOfAllShows = $model->getAllShows();
+
+		return $view->render($response, 'show/add.twig', [
+			'followed' => $listOfAllShows,
+		]);
+	}
+
+
+	/**
+	 * Draw the view with relevant shows
+	 *
+	 * @param Response $response
+	 * @param Twig     $view
+	 * @param          $listOfAllShows
+	 * @return Response
+	 */
+	private function drawView(Response $response, Twig $view, $listOfAllShows) {
+		return $view->render($response, 'show/followed.twig', [
+			'followed' => $listOfAllShows,
+		]);
+	}
 }
