@@ -10,7 +10,7 @@
 
 namespace Epguides\Api;
 
-use http\Exception;
+use Exception;
 
 class EpguidesApi
 {
