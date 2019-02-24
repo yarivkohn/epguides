@@ -34,6 +34,11 @@ class DbController
 	    return $response->withRedirect($router->pathFor('home') );
     }
 
+    public function updateCron(Router $router, EpisodesDb $episode)
+    {
+        $episode->updateDbData();
+    }
+
 	/**
 	 * Add new show to watchlist
 	 * @param          $showName
