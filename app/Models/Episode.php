@@ -110,10 +110,11 @@ class Episode extends Model
     }
 
 
-	/**
-	 * @param $episodeData
-	 * @return \stdClass
-	 */
+    /**
+     * @param $episodeData
+     * @return \stdClass
+     * @throws \Exception
+     */
 	private function createAddEpisodeObject($episodeData)
 	{
 		$episode = new \stdClass();
@@ -125,11 +126,12 @@ class Episode extends Model
 	}
 
 
-	/**
+    /**
      * If episode was released in the past week, add "is_new" tag.
      * If episode was released more than a week ago but less than 2 weeks, add "getting_older" tag.
      *
      * @param $episode
+     * @throws \Exception
      */
     private function isNewRelease($episode)
     {
@@ -153,6 +155,7 @@ class Episode extends Model
      * add "almost_released" tag.
      *
      * @param $episode
+     * @throws \Exception
      */
     private function isReleaseDateClose($episode)
     {
@@ -170,6 +173,7 @@ class Episode extends Model
 
     /**
      * @param $episode
+     * @throws \Exception
      */
     private function addDisplayDecorations($episode)
     {
