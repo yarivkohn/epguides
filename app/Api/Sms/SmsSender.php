@@ -13,8 +13,8 @@ use Epguides\Models\Episode;
 class SmsSender {
 
 	const USER_EMAIL       = 'yariv_kohn@yahoo.com';
-	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dba'; //correct HASH key
-//	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dbaabcder'; //Incorrect HASH key
+//	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dba'; //correct HASH key
+	const HASH             = '6408204f070b032298e7b6dac6bf4939a8162173cdd97beee637f7f0af277dbaabcder'; //Incorrect HASH key
 	const SUBSCRIBER = '972502164884';
     const KEY_SUCCESS = 'success';
 
